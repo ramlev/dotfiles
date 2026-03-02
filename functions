@@ -1,0 +1,84 @@
+# Run tests
+function p() {
+   if [ -f vendor/bin/pest ]; then
+      vendor/bin/pest "$@"
+   else
+      vendor/bin/phpunit "$@"
+   fi
+}
+
+function pf() {
+   if [ -f vendor/bin/pest ]; then
+      vendor/bin/pest --filter "$@"
+   else
+      vendor/bin/phpunit --filter "$@"
+   fi
+}
+
+# Create a new directory and enter it
+function mkd() {
+   mkdir -p "$@" && cd "$@"
+}
+
+# All the dig info
+function digga() {
+	dig +nocmd "$1" any +multiline +noall +answer
+}
+
+function removehost() {
+   ssh-keygen -R "$1"
+}
+
+#  Commit everything
+function commit() {
+  commitMessage="$*"
+
+  git add .
+
+  if [ "$commitMessage" = "" ]; then
+    # Show diff stats in a styled format
+    gum style --border rounded --padding "1 2" --margin "1 0" \
+      "$(git diff --cached --stat)"
+
+    # Get diff for AI processing
+    diff_input=$(echo "=== Summary ===" && git diff --cached --stat && \
+                 echo -e "\n=== Diff (truncated if large) ===" && \
+                 git diff --cached | head -c 50000)
+
+    # Generate commit message with spinner
+    commitMessage=$(echo "$diff_input" | gum spin --spinner dot \
+      --title "Generating commit message..." -- \
+      claude -p "Write a single-line commit message for this diff. Output ONLY the message, no quotes, no explanation, no markdown.")
+
+    # Show generated message and confirm
+    gum style --foreground 212 --bold "Generated message:"
+    gum style --foreground 86 --italic "$commitMessage"
+
+    if gum confirm "Use this commit message?"; then
+      git commit -m "$commitMessage"
+      gum style --foreground 46 "✓ Committed successfully!"
+    else
+      # Allow editing
+      commitMessage=$(gum input --placeholder "Enter commit message..." --value "$commitMessage")
+      git commit -m "$commitMessage"
+      gum style --foreground 46 "✓ Committed successfully!"
+    fi
+    return
+  fi
+
+  # Manual commit message provided
+  eval "git commit -a -m '${commitMessage}'"
+  gum style --foreground 46 "✓ Committed successfully!"
+}
+
+function claude-yolo() {
+  claude --dangerously-skip-permissions "$@"
+}
+
+function git-prune-local() {
+  git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D
+}
+
+function clone() {
+  gh repo clone "$1" "${@:2}"
+}
