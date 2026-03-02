@@ -1,5 +1,5 @@
 ZSH=$HOME/.oh-my-zsh
-ZSH_CUSTOM=$HOME/.dotfiles/zsh-custom
+ZSH_CUSTOM=$HOME/.zsh/zsh-custom
 ZSH_THEME="agnoster"
 AGNOSTER_DIR_FG=black
 
@@ -41,14 +41,11 @@ bindkey -s "^[Oo" "/"
 
 # Load the shell dotfiles, and then some:
 # * ~/.dotfiles-custom can be used for other settings you don’t want to commit.
-for file in ~/.dotfiles/{exports,aliases,functions}; do
+for file in ~/.zsh/{exports,aliases,functions}.zsh; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 
 unset file
-
-# Directory jumping now handled by zoxide (see modern tools section below)
-
 
 # Sudoless npm https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md
 NPM_PACKAGES="${HOME}/.npm-packages"

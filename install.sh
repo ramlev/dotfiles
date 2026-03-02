@@ -32,10 +32,14 @@ fi
 echo ""
 
 # Git configuration
-step "Configuring Git"
-ln -sf ~/.dotfiles/.gitconfig ~/.gitconfig
-ln -sf ~/.dotfiles/.global-gitignore ~/.global-gitignore
-success "Git configured"
+step "Mapping Git"
+stow git
+
+step "Mapping zsh"
+stow zsh
+
+step "Mapping home (.bin)"
+stow home
 
 if ! command -v brew &>/dev/null; then
     step "Installing Homebrew"
