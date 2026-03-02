@@ -15,7 +15,7 @@
 [user]
     name = Hasse Wilson
     email = hasse@ramlev.dk
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIUKfB40nIF9KB4WasfA5VFWS61aeKADpUS/SEE+MD8Q
+	signingkey = /Users/hasse/.ssh/id_ed25519_codeberg.pub
 
 [commit]
     gpgsign = true
