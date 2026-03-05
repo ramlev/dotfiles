@@ -1,25 +1,3 @@
-# Run tests
-function p() {
-   if [ -f vendor/bin/pest ]; then
-      vendor/bin/pest "$@"
-   else
-      vendor/bin/phpunit "$@"
-   fi
-}
-
-function pf() {
-   if [ -f vendor/bin/pest ]; then
-      vendor/bin/pest --filter "$@"
-   else
-      vendor/bin/phpunit --filter "$@"
-   fi
-}
-
-# Create a new directory and enter it
-function mkd() {
-   mkdir -p "$@" && cd "$@"
-}
-
 # All the dig info
 function digga() {
 	dig +nocmd "$1" any +multiline +noall +answer

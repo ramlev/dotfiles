@@ -1,5 +1,5 @@
 # Make vim the default editor
-export EDITOR="vim"
+export EDITOR="nvim"
 
 # Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=32768
@@ -13,6 +13,8 @@ export HISTORY_IGNORE="(ls|cd|cd -|pwd|exit|date|* --help)"
 # Prefer US English and use UTF-8
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
+
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
 
 # Highlight section titles in manual pages (bold yellow)
 export LESS_TERMCAP_md=$'\e[1;33m'
