@@ -30,6 +30,9 @@ cx() { cd "$@" && l; }
 # Git
 alias gpo="git push origin"
 alias push="git push"
+alias ggpush='git push origin "$(git_current_branch)"'
+alias gpoat="git push origin --all && git push origin --tags"
+alias ggpull='git pull origin "$(git_current_branch)"'
 alias pull="git pull"
 alias gc="git commit -m"
 alias gca="git commit -a -m"
