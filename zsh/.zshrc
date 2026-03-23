@@ -12,7 +12,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Hide username in prompt
 DEFAULT_USER=`whoami`
 
-plugins=()
+plugins=(nvm)
 
 source $ZSH/oh-my-zsh.sh
 

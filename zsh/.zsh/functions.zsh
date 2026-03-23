@@ -11,7 +11,20 @@ function removehost() {
 function commit() {
   commitMessage="$*"
 
-  git add .
+  if gum confirm "Execute git add . ?" --default=No; then
+    git add .
+  else
+    selected=$({ git diff --name-only; git ls-files --others --exclude-standard; } | sort -u | gum choose --no-limit --header "Select files to stage:")
+    if [ -n "$selected" ]; then
+      echo "$selected" | xargs git add
+    fi
+  fi
+
+  # Exit if nothing is staged
+  if git diff --cached --quiet; then
+    gum style --foreground 196 "Nothing staged. Aborting."
+    return 1
+  fi
 
   if [ "$commitMessage" = "" ]; then
     # Show diff stats in a styled format
