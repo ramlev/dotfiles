@@ -1,0 +1,75 @@
+schemaVersion = 1
+
+[hotkeys.app.activate]
+carbonKeyCode = 49
+carbonModifiers = 256
+
+[hotkeys.app.leaderMode]
+carbonKeyCode = 49
+carbonModifiers = 2048
+
+[hotkeys.app.textMode]
+carbonKeyCode = 49
+carbonModifiers = 4096
+
+[[hotkeys.custom]]
+id = '1FF7A769-1A0C-46D1-9C9E-F14045B38A76'
+presentation = 'auto'
+
+    [hotkeys.custom.command]
+    actionIdentifier = 'Tuna.BasicActionsCatalog.Browse'
+    subjectIdentifier = 'TunaEmoji.EmojiSearchCatalog.Emoji'
+
+    [hotkeys.custom.shortcut]
+    carbonKeyCode = 49
+    carbonModifiers = 6144
+
+[[hotkeys.custom]]
+id = 'E46E02E2-E179-49B0-9CF9-553128B0844F'
+presentation = 'auto'
+
+    [hotkeys.custom.command]
+    actionIdentifier = 'Tuna.BasicActionsCatalog.Browse'
+    subjectIdentifier = 'Tuna.Internal.ClipboardProxyCatalog.Clipboard History'
+
+    [hotkeys.custom.shortcut]
+    carbonKeyCode = 8
+    carbonModifiers = 768
+
+[[leaderMode.bindings]]
+key = 'm'
+url = 'tuna://run/path.%252FSystem%252FApplications%252FMessages.app/Open'
+
+[[leaderMode.bindings]]
+key = 'd'
+url = 'tuna://run/path.%252FUsers%252Fhasse%252FDownloads/Open'
+
+[[leaderMode.bindings]]
+key = 'h'
+url = 'tuna://run/path.%252FUsers%252Fhasse/Open'
+
+[[leaderMode.bindings]]
+key = 'enter'
+url = 'tuna://run/TunaCore.AllApplicationsCatalog.Ghostty/Open'
+
+[[leaderMode.bindings]]
+key = 'b'
+url = 'tuna://run/TunaCore.AllApplicationsCatalog.Brave%20Browser/Open'
+
+[[leaderMode.bindings]]
+key = 'y'
+url = 'tuna://run/TunaEmoji.EmojiSearchCatalog.Emoji/Tuna.BasicActionsCatalog.Browse'
+
+[[leaderMode.bindings]]
+key = 'f'
+url = 'tuna://run/TunaCore.AllApplicationsCatalog.FMail3/Open'
+
+[settings]
+leaderModeThemeStyle = 'cheatsheet'
+themeIdentifier = 'com.brnbw.tuna.themes.NormieBar'
+
+[[catalogSettings]]
+catalogIdentifier = 'com.brnbw.tuna.themes.default'
+
+    [catalogSettings.values]
+    ThemeTint = 'graphite'
