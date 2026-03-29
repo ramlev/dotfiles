@@ -25,6 +25,18 @@ presentation = 'auto'
     carbonModifiers = 6144
 
 [[hotkeys.custom]]
+id = '844294B2-518D-4FF1-B6EA-978DF43CE425'
+presentation = 'auto'
+
+    [hotkeys.custom.command]
+    actionIdentifier = 'TunaCore.CommonActionsCatalog.Open'
+    subjectIdentifier = 'TunaCore.AllApplicationsCatalog.FMail3'
+
+    [hotkeys.custom.shortcut]
+    carbonKeyCode = 3
+    carbonModifiers = 6912
+
+[[hotkeys.custom]]
 id = 'E46E02E2-E179-49B0-9CF9-553128B0844F'
 presentation = 'auto'
 
@@ -65,7 +77,7 @@ key = 'f'
 url = 'tuna://run/TunaCore.AllApplicationsCatalog.FMail3/Open'
 
 [settings]
-leaderModeThemeStyle = 'cheatsheet'
+leaderModeThemeStyle = 'breadcrumb'
 themeIdentifier = 'com.brnbw.tuna.themes.NormieBar'
 
 [[catalogSettings]]
