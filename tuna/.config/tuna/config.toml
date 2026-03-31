@@ -77,7 +77,7 @@ url = 'tuna://run/path.%252FUsers%252Fhasse/Open'
 
 [[leaderMode.bindings]]
 key = 'enter'
-url = 'tuna://run/TunaCore.AllApplicationsCatalog.Ghostty/Open'
+url = 'tuna://run/text.open%2520-na%2520Ghostty.app/Run%20Text%20as%20Shell%20Command'
 
 [[leaderMode.bindings]]
 key = 'b'
