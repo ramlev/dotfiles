@@ -7,7 +7,8 @@ alias ci="composer install"
 alias cda="composer dump-autoload -o"
 alias hostfile="sudo vi /etc/hosts"
 alias nah='git reset --hard;git clean -df'
-
+alias vim=nvim
+alias v=vim
 alias gtt='gittower $(git root)'
 alias sshconfig="vi ~/.ssh/config"
 alias copykey='command cat ~/.ssh/id_ed25519.pub 2>/dev/null || command cat ~/.ssh/id_rsa.pub 2>/dev/null | pbcopy'
@@ -80,22 +81,9 @@ alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 alias sudo='sudo '
 
 # Modern CLI tool aliases (conditional on installation)
-if command -v eza &> /dev/null; then
     alias ls="eza --icons --group-directories-first"
     alias l="eza -la --icons --group-directories-first --hyperlink"
     alias ll="eza -l --icons --group-directories-first --hyperlink"
     alias lt="eza --tree --level=2 --icons"
-fi
-
-if command -v bat &> /dev/null; then
     alias cat="bat --style=plain"
-fi
-
-if command -v rg &> /dev/null; then
     alias grep="rg"
-fi
-
-if command -v bottom &> /dev/null; then
-    alias htop="btm"
-    alias top="btm"
-fi

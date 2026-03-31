@@ -7,6 +7,10 @@ function removehost() {
    ssh-keygen -R "$1"
 }
 
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude .git . "$1" 2>/dev/null
+}
+
 #  Commit everything
 function commit() {
   commitMessage="$*"
@@ -72,4 +76,8 @@ function git-prune-local() {
 
 function clone() {
   gh repo clone "$1" "${@:2}"
+}
+
+function mkcd() {
+  mkdir -p "$@" && cd "$@"
 }
