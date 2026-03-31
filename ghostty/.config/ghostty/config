@@ -3,8 +3,8 @@ font-style = "Regular"
 font-size = 16
 adjust-cell-height = 10%
 
-# theme = Nord
-theme = light:Zenbones Light,dark:Zenbones Dark
+theme = Nord
+#theme = light:Zenbones Light,dark:Zenbones Dark
 cursor-style = block
 cursor-color = #dd0455
 cursor-text = #ffffff
