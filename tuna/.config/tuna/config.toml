@@ -28,18 +28,6 @@ presentation = 'auto'
     carbonModifiers = 6912
 
 [[hotkeys.custom]]
-id = '844294B2-518D-4FF1-B6EA-978DF43CE425'
-presentation = 'auto'
-
-    [hotkeys.custom.command]
-    actionIdentifier = 'TunaCore.CommonActionsCatalog.Open'
-    subjectIdentifier = 'TunaCore.AllApplicationsCatalog.FMail3'
-
-    [hotkeys.custom.shortcut]
-    carbonKeyCode = 3
-    carbonModifiers = 6912
-
-[[hotkeys.custom]]
 id = 'E46E02E2-E179-49B0-9CF9-553128B0844F'
 presentation = 'auto'
 
@@ -64,8 +52,10 @@ presentation = 'auto'
     carbonModifiers = 768
 
 [[leaderMode.bindings]]
-key = 'm'
-url = 'tuna://run/path.%252FSystem%252FApplications%252FMessages.app/Open'
+iconPath = '/Applications/Ghostty.app'
+key = 'enter'
+label = 'Ghostty'
+url = 'tuna://run/text.open%2520-na%2520Ghostty.app/Run%20Text%20as%20Shell%20Command'
 
 [[leaderMode.bindings]]
 key = 'd'
@@ -76,19 +66,21 @@ key = 'h'
 url = 'tuna://run/path.%252FUsers%252Fhasse/Open'
 
 [[leaderMode.bindings]]
-key = 'enter'
-url = 'tuna://run/text.open%2520-na%2520Ghostty.app/Run%20Text%20as%20Shell%20Command'
-
-[[leaderMode.bindings]]
 key = 'b'
 url = 'tuna://run/TunaCore.AllApplicationsCatalog.Brave%20Browser/Open'
 
 [[leaderMode.bindings]]
+iconPath = 'face.smiling'
 key = 'y'
 url = 'tuna://run/TunaEmoji.EmojiSearchCatalog.Emoji/Tuna.BasicActionsCatalog.Browse'
 
 [[leaderMode.bindings]]
+iconPath = 'paperplane.fill'
 key = 'a'
+
+    [[leaderMode.bindings.children]]
+    key = 'm'
+    url = 'tuna://run/path.%252FSystem%252FApplications%252FMessages.app/Open'
 
     [[leaderMode.bindings.children]]
     key = 'f'
@@ -102,9 +94,28 @@ key = 'a'
     key = 'r'
     url = 'tuna://run/TunaCore.AllApplicationsCatalog.Ray/Open'
 
+[[leaderMode.bindings]]
+key = 'c'
+
+    [[leaderMode.bindings.children]]
+    key = 'm'
+    url = 'tuna://run/url.https:%252F%252Fmymarks.net/Open%20URL'
+
 [settings]
 leaderModeThemeStyle = 'cheatsheet'
 themeIdentifier = 'com.brnbw.tuna.themes.default'
+
+[[smartLinks.entries]]
+enabled = true
+name = 'Academicbooks ISBN'
+requiresInput = true
+template = 'https://academicbooks.dk/model/{{input}}'
+
+[[smartLinks.entries]]
+enabled = true
+name = 'Kagi.com'
+requiresInput = true
+template = 'https://kagi.com/search?q={{input}}'
 
 [[catalogSettings]]
 catalogIdentifier = 'com.brnbw.tuna.themes.default'
