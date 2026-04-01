@@ -63,6 +63,7 @@ url = 'tuna://run/path.%252FUsers%252Fhasse%252FDownloads/Open'
 
 [[leaderMode.bindings]]
 key = 'h'
+label = 'Home'
 url = 'tuna://run/path.%252FUsers%252Fhasse/Open'
 
 [[leaderMode.bindings]]
@@ -77,6 +78,7 @@ url = 'tuna://run/TunaEmoji.EmojiSearchCatalog.Emoji/Tuna.BasicActionsCatalog.Br
 [[leaderMode.bindings]]
 iconPath = 'paperplane.fill'
 key = 'a'
+label = 'Apps'
 
     [[leaderMode.bindings.children]]
     key = 'm'
@@ -94,12 +96,24 @@ key = 'a'
     key = 'r'
     url = 'tuna://run/TunaCore.AllApplicationsCatalog.Ray/Open'
 
+    [[leaderMode.bindings.children]]
+    key = 'q'
+    url = 'tuna://run/TunaCore.AllApplicationsCatalog.Reeder/Open'
+
 [[leaderMode.bindings]]
+iconPath = 'network'
 key = 'c'
+label = 'Urls'
 
     [[leaderMode.bindings.children]]
+    iconPath = '/Users/hasse/www/mymarks/public/favicon-32.png'
     key = 'm'
     url = 'tuna://run/url.https:%252F%252Fmymarks.net/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    iconPath = '/Users/hasse/Desktop/64x64.png'
+    key = 'r'
+    url = 'tuna://run/url.https:%252F%252Freddit.com/Open%20URL'
 
 [settings]
 leaderModeThemeStyle = 'cheatsheet'
