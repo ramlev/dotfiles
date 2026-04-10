@@ -14,7 +14,6 @@ brew "bat"
 brew "node"
 brew "bitwarden-cli"
 brew "blueutil"
-brew "bottom"
 brew "glib"
 brew "cloudflared"
 brew "cmatrix"
@@ -134,8 +133,6 @@ cask "hazel"
 cask "imageoptim"
 cask "iterm2"
 cask "karabiner-elements"
-cask "libreoffice"
-cask "notesnook"
 cask "raycast"
 cask "slack"
 cask "spotify"
@@ -157,4 +154,3 @@ mas "Pixelmator Pro", id: 1289583905
 mas "Reeder", id: 1529448980
 mas "Tot", id: 1491071483
 mas "Xcode", id: 497799835
-go "github.com/StackExchange/dnscontrol/v3"
