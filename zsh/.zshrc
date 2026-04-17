@@ -19,6 +19,11 @@ zinit wait lucid light-mode for \
   " \
   zsh-users/zsh-history-substring-search
 
+  zinit wait lucid light-mode for \
+  atload"_zsh_autosuggest_start" \
+  zsh-users/zsh-autosuggestions
+
+
 # ── Homebrew (static) ─────────────────────────────────────────────────────────
 export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
