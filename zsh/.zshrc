@@ -84,6 +84,9 @@ _cache_eval() {
   source "$cache"
 }
 # ── Completions (eager) ───────────────────────────────────────────────────────
+
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
 autoload -Uz compinit && compinit -C
 
 eval "$(zoxide init --cmd z zsh)"
