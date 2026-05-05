@@ -55,7 +55,7 @@ function commit() {
     # Generate commit message with spinner
     commitMessage=$(echo "$diff_input" | gum spin --spinner dot \
       --title "Generating commit message..." -- \
-      claude -p "Write a single-line commit message for this diff. Output ONLY the message, no quotes, no explanation, no markdown.")
+      claude -p "Write a single-line commit message for this diff. Output ONLY the message, no quotes, no explanation, no markdown. Max 80 characters, prefix chore etc if valid.")
 
     # Show generated message and confirm
     gum style --foreground 212 --bold "Generated message:"

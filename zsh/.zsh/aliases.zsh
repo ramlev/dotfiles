@@ -13,6 +13,9 @@ alias gtt='gittower $(git root)'
 alias sshconfig="vi ~/.ssh/config"
 alias copykey='command cat ~/.ssh/id_ed25519.pub 2>/dev/null || command cat ~/.ssh/id_rsa.pub 2>/dev/null | pbcopy'
 
+alias ddl="ddev launch"
+alias ddls="ddev describe"
+
 # Docker
 alias dco="docker compose"
 alias dps="docker ps"
