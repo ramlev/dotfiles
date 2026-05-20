@@ -15,7 +15,7 @@
 [user]
     name = Hasse Wilson
     email = hasse@ramlev.dk
-	signingkey = /Users/hasse/.ssh/id_ed25519
+	signingkey = /Users/hasse/.ssh/id_ed25519.pub
 
 [delta]
 	navigate = true
@@ -78,3 +78,7 @@
 	gpgsign = true
 [mergetool]
 	keepBackup = false
+[gpg "ssh"]
+	allowedSignersFile = /Users/hasse/.ssh/allowed_signers
+[gitflow "release"]
+	finishCheckout = develop

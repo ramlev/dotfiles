@@ -9,7 +9,7 @@ alias hostfile="sudo vi /etc/hosts"
 alias nah='git reset --hard;git clean -df'
 alias vim=nvim
 alias v=vim
-alias gtt='gittower $(git root)'
+alias fff='fork $(git root)'
 alias sshconfig="vi ~/.ssh/config"
 alias copykey='command cat ~/.ssh/id_ed25519.pub 2>/dev/null || command cat ~/.ssh/id_rsa.pub 2>/dev/null | pbcopy'
 
@@ -66,9 +66,6 @@ alias ltree="eza --tree --level=2  --icons --git"
 # PhpStorm
 alias phpstorm='open -a ~/Applications/PhpStorm.app "`pwd`"'
 
-# Zed
-alias zed='open -a /Applications/Zed.app "`pwd`"'
-
 # Show/hide hidden files in Finder
 alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
 alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
@@ -84,9 +81,9 @@ alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 alias sudo='sudo '
 
 # Modern CLI tool aliases (conditional on installation)
-    alias ls="eza --icons --group-directories-first"
-    alias l="eza -la --icons --group-directories-first --hyperlink"
-    alias ll="eza -l --icons --group-directories-first --hyperlink"
-    alias lt="eza --tree --level=2 --icons"
-    alias cat="bat --style=plain"
-    alias grep="rg"
+alias ls="eza --icons --group-directories-first"
+alias l="eza -la --icons --group-directories-first --hyperlink"
+alias ll="eza -l --icons --group-directories-first --hyperlink"
+alias lt="eza --tree --level=2 --icons"
+alias catp="bat --style=plain"
+alias grep="rg"
