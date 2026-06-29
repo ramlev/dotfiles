@@ -4,6 +4,32 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "CTRL + OPT + CMD + M - Open mymarks.net",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "m",
+                                    "modifiers": { "mandatory": ["left_command", "left_control", "left_option"] }
+                                },
+                                "to": [{ "shell_command": "open 'https://mymarks.net'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Hyper + G - Ghostty",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "g",
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"Ghostty\" to activate' -e 'tell application \"System Events\" to keystroke \"n\" using command down'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "CTRL + OPT + CMD + C - Open claude.ai",
                         "manipulators": [
                             {
