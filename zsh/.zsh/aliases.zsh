@@ -10,6 +10,7 @@ alias nah='git reset --hard;git clean -df'
 alias vim=nvim
 alias v=vim
 alias fff='fork $(git root)'
+alias tower='gittower $(git root)'
 alias sshconfig="vi ~/.ssh/config"
 alias copykey='command cat ~/.ssh/id_ed25519.pub 2>/dev/null || command cat ~/.ssh/id_rsa.pub 2>/dev/null | pbcopy'
 
