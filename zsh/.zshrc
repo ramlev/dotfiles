@@ -1,27 +1,16 @@
-# ── Zinit bootstrap ───────────────────────────────────────────────────────────
-ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
-if [[ ! -d "$ZINIT_HOME" ]]; then
-  mkdir -p "$(dirname "$ZINIT_HOME")"
-  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-fi
-source "$ZINIT_HOME/zinit.zsh"
+# ── Plugins (native, via Homebrew) ────────────────────────────────────────────
+# zsh-completions: extend fpath before compinit (runs later in this file)
+fpath=(/opt/homebrew/share/zsh-completions $fpath)
 
-# ── Plugins ───────────────────────────────────────────────────────────────────
-zinit wait lucid light-mode for \
-  zdharma-continuum/fast-syntax-highlighting \
-  zsh-users/zsh-autosuggestions \
-  zsh-users/zsh-completions \
-  atload"
-    bindkey '^[[A' history-substring-search-up
-    bindkey '^[[B' history-substring-search-down
-    bindkey '^[OA' history-substring-search-up
-    bindkey '^[OB' history-substring-search-down
-  " \
-  zsh-users/zsh-history-substring-search
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 
-  zinit wait lucid light-mode for \
-  atload"_zsh_autosuggest_start" \
-  zsh-users/zsh-autosuggestions
+# history-substring-search must be sourced AFTER syntax highlighting
+source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
 
 
 # ── Homebrew (static) ─────────────────────────────────────────────────────────
@@ -95,4 +84,3 @@ eval "$(zoxide init --cmd z zsh)"
 _cache_eval "fnm"      fnm env --use-on-cd
 _cache_eval "fzf"      fzf --zsh
 _cache_eval "starship" starship init zsh
-
