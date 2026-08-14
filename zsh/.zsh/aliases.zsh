@@ -27,6 +27,8 @@ alias dx="docker exec -it"
 # Dirs
 cx() { cd "$@" && l; }
 
+cdg() { cd "$(git root)" }
+
 # Git
 alias gpo="git push origin"
 alias push="git push"
