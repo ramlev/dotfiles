@@ -4,6 +4,19 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Hyper + R - Rio",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "r",
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'tell application \"Rio\"' -e 'activate' -e 'end tell' -e 'tell application \"System Events\" to keystroke \"n\" using {command down}'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "CTRL + OPT + CMD + C - Open claude.ai",
                         "manipulators": [
                             {
@@ -25,6 +38,19 @@
                                     "modifiers": { "mandatory": ["left_command", "left_control", "left_option"] }
                                 },
                                 "to": [{ "shell_command": "open ~/Downloads" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "CTRL + OPT + CMD + G - Open chatgpt.com",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "g",
+                                    "modifiers": { "mandatory": ["left_command", "left_control", "left_option"] }
+                                },
+                                "to": [{ "shell_command": "open 'https://chatgpt.com'" }],
                                 "type": "basic"
                             }
                         ]
