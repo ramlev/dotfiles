@@ -121,19 +121,6 @@
                         ]
                     },
                     {
-                        "description": "Hyper + R - Rio",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "r",
-                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
-                                },
-                                "to": [{ "shell_command": "osascript -e 'set wasRunning to (application \"Rio\" is running)' -e 'tell application \"Rio\" to activate' -e 'if wasRunning then tell application \"System Events\" to keystroke \"n\" using {command down}'" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "manipulators": [
                             {
                                 "description": "Change caps_lock to command+control+option+shift.",
