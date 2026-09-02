@@ -95,19 +95,6 @@
                         ]
                     },
                     {
-                        "description": "Hyper + G - Ghostty",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "g",
-                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
-                                },
-                                "to": [{ "shell_command": "osascript -e 'tell application \"Ghostty\" to activate' -e 'tell application \"System Events\" to keystroke \"n\" using command down'" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Hyper + I - iTerm2",
                         "manipulators": [
                             {
