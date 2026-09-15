@@ -1,0 +1,74 @@
+# Ghostty config — see `ghostty +show-config --default --docs` for all options.
+# Reload a running Ghostty with cmd+shift+, (some options need a full restart).
+
+# ── Theme ────────────────────────────────────────────────────────────────
+# Always dark Nord, regardless of macOS appearance.
+theme = Nord
+window-theme = dark
+background-opacity = 0.95
+background-blur = 20
+unfocused-split-opacity = 0.85
+
+# ── Font ─────────────────────────────────────────────────────────────────
+font-family = MesloLGS Nerd Font Mono
+font-size = 16
+font-thicken = true
+font-thicken-strength = 60
+adjust-cell-height = 10%
+
+# ── Danish keyboard ──────────────────────────────────────────────────────
+# Left Option stays a normal macOS Option key so the Danish layout can type
+# @ £ $ | \ { } [ ] ~ etc. Right Option acts as Alt/Meta for the shell,
+# tmux and nvim (alt+b, alt+f, alt+., ...).
+macos-option-as-alt = right
+
+# Dead keys (´ ¨ ^ ~) and æ ø å work out of the box via macOS text input.
+
+# ── Window ───────────────────────────────────────────────────────────────
+macos-titlebar-style = tabs
+window-padding-x = 10
+window-padding-y = 8
+window-padding-balance = true
+window-save-state = always
+window-inherit-working-directory = true
+macos-icon = xray
+
+# ── Cursor & mouse ───────────────────────────────────────────────────────
+cursor-style = bar
+cursor-style-blink = false
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+clipboard-paste-protection = true
+
+# ── Shell integration ────────────────────────────────────────────────────
+# ssh-*: install Ghostty's terminfo on remote hosts, fall back to xterm-256color.
+shell-integration = zsh
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
+
+# ── Quick terminal (drop-down) ───────────────────────────────────────────
+# Global hotkeys need Ghostty enabled under
+# System Settings → Privacy & Security → Accessibility.
+quick-terminal-position = top
+quick-terminal-animation-duration = 0.15
+keybind = global:ctrl+super+t=toggle_quick_terminal
+
+# ── Keybinds ─────────────────────────────────────────────────────────────
+# The default split navigation (cmd+[ / cmd+]) needs Option on a Danish
+# layout, so add letter-based bindings that don't depend on brackets.
+keybind = super+ctrl+h=goto_split:left
+keybind = super+ctrl+j=goto_split:down
+keybind = super+ctrl+k=goto_split:up
+keybind = super+ctrl+l=goto_split:right
+keybind = super+ctrl+shift+h=resize_split:left,20
+keybind = super+ctrl+shift+j=resize_split:down,20
+keybind = super+ctrl+shift+k=resize_split:up,20
+keybind = super+ctrl+shift+l=resize_split:right,20
+keybind = super+ctrl+equal=equalize_splits
+keybind = super+ctrl+z=toggle_split_zoom
+
+# `+` is its own key on the Danish layout (right of 0).
+keybind = super+plus=increase_font_size:1
+keybind = super+minus=decrease_font_size:1
+keybind = super+zero=reset_font_size
+
+keybind = super+shift+comma=reload_config
