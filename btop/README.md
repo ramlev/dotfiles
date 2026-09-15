@@ -1,0 +1,39 @@
+# btop
+
+Resource monitor with the Nord theme. Stow package: symlinked to
+`~/.config/btop/btop.conf`.
+
+## Install
+
+```sh
+brew install btop
+cd ~/.dotfiles && stow btop
+```
+
+## Setup notes
+
+- **Theme:** `nord`, the theme that ships with btop
+  (`/opt/homebrew/share/btop/themes/nord.theme`), so no theme file lives here.
+- **Background:** `theme_background = false`, so Ghostty's Nord background,
+  opacity and blur show through.
+- **Saved on exit:** `save_config_on_exit = true` means btop rewrites
+  `btop.conf` when it quits. Changes made in the options menu (`o`) show up as
+  a git diff.
+- **Custom themes:** drop `.theme` files in `.config/btop/themes/`.
+
+## Cheatsheet
+
+| Key | Action |
+| --- | --- |
+| `m` / `Esc` | Menu |
+| `o` | Options |
+| `h` | Help |
+| `1`–`4` | Toggle cpu / mem / net / proc boxes |
+| `p` / `⇧P` | Next / previous layout preset |
+| `f` | Filter processes |
+| `←` / `→` | Change process sort column |
+| `r` | Reverse sort |
+| `e` | Tree view |
+| `Enter` | Process details |
+| `t` / `k` | Terminate / kill selected process |
+| `q` | Quit |
