@@ -25,7 +25,9 @@ macos-option-as-alt = right
 # Dead keys (´ ¨ ^ ~) and æ ø å work out of the box via macOS text input.
 
 # ── Window ───────────────────────────────────────────────────────────────
-macos-titlebar-style = tabs
+# Not "tabs": that custom titlebar is only tested up to macOS 14 and renders
+# broken on newer macOS, especially with background-opacity/blur.
+macos-titlebar-style = transparent
 window-padding-x = 10
 window-padding-y = 8
 window-padding-balance = true
