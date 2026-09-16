@@ -79,9 +79,9 @@ alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 alias sudo='sudo '
 
 # Modern CLI tool aliases (conditional on installation)
-alias ls="eza --icons --group-directories-first"
-alias l="eza -la --icons --group-directories-first --hyperlink"
-alias ll="eza -l --icons --group-directories-first --hyperlink"
+alias ls="eza --group-directories-first"
+alias l="eza -la --group-directories-first --hyperlink"
+alias ll="eza -l --group-directories-first --hyperlink"
 alias lt="eza --tree --level=2 --icons"
 alias catp="bat --style=plain"
 alias grep="rg"

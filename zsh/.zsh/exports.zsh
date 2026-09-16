@@ -1,5 +1,4 @@
-# Make vim the default editor
-export EDITOR="nvim"
+# EDITOR/VISUAL live in ~/.zshenv so non-interactive shells get them too.
 
 # ── Environment ───────────────────────────────────────────────────────────────
 export XDG_CONFIG_HOME="/Users/hasse/.config"
