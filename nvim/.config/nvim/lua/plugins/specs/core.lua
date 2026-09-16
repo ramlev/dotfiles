@@ -12,14 +12,17 @@ return {
     opts = { default = true },
   },
 
-  -- Colorscheme
+  -- Colorscheme — TokyoNight Night, same palette as ghostty, tmux and btop.
   {
     'folke/tokyonight.nvim',
     lazy = false,
     priority = 1000,
     opts = {
       style = 'night',
-      transparent = false,
+      -- Ghostty draws the background itself (with opacity + blur), the tmux
+      -- status bar uses bg=default and btop runs theme_background = false, so
+      -- let it show through instead of painting an opaque #1a1b26 on top.
+      transparent = true,
       terminal_colors = true,
       styles = {
         comments = { italic = true },
@@ -28,7 +31,7 @@ return {
     },
     config = function(_, opts)
       require('tokyonight').setup(opts)
-      vim.cmd('colorscheme tokyonight')
+      vim.cmd.colorscheme('tokyonight-night')
     end,
   },
 }
