@@ -1,6 +1,6 @@
 # Ghostty
 
-Nord theme, MesloLGS Nerd Font Mono, Danish keyboard tweaks. Stow package:
+TokyoNight Night theme, MesloLGS Nerd Font Mono, Danish keyboard tweaks. Stow package:
 symlinked to `~/.config/ghostty/config`.
 
 ## Install
@@ -15,7 +15,7 @@ The quick terminal hotkey needs Ghostty allowed under System Settings → Privac
 
 ## Setup notes
 
-- **Theme:** always dark Nord, 95% opacity with blur.
+- **Theme:** always dark TokyoNight Night, 95% opacity with blur.
 - **Option keys:** left Option types Danish characters (`@ £ $ | \ { } [ ]`).
   Right Option acts as Alt/Meta for the shell, tmux and nvim.
 - **Copy on select:** selecting text copies it to the clipboard.

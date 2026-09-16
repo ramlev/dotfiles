@@ -2,8 +2,8 @@
 # Reload a running Ghostty with cmd+shift+, (some options need a full restart).
 
 # ── Theme ────────────────────────────────────────────────────────────────
-# Always dark Nord, regardless of macOS appearance.
-theme = Nord
+# Always dark TokyoNight Night, regardless of macOS appearance.
+theme = TokyoNight Night
 window-theme = dark
 background-opacity = 0.95
 background-blur = 20
@@ -14,7 +14,7 @@ font-family = MesloLGS Nerd Font Mono
 font-size = 16
 font-thicken = true
 font-thicken-strength = 60
-adjust-cell-height = 10%
+adjust-cell-height = 30%
 
 # ── Danish keyboard ──────────────────────────────────────────────────────
 # Left Option stays a normal macOS Option key so the Danish layout can type
@@ -28,6 +28,8 @@ macos-option-as-alt = right
 # Not "tabs": that custom titlebar is only tested up to macOS 14 and renders
 # broken on newer macOS, especially with background-opacity/blur.
 macos-titlebar-style = transparent
+window-height = 23
+window-width = 120
 window-padding-x = 10
 window-padding-y = 8
 window-padding-balance = true
