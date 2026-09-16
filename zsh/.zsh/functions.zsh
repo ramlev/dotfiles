@@ -93,3 +93,19 @@ function clone() {
 function mkcd() {
   mkdir -p "$@" && cd "$@"
 }
+
+# Plain `tmux` attaches to the "hasse" session, creating it if missing.
+# Any arguments are passed straight through to tmux.
+function tmux() {
+  if (( $# )); then
+    command tmux "$@"
+    return
+  fi
+
+  if [[ -n "$TMUX" ]]; then
+    command tmux has-session -t Hasse2>/dev/null || command tmux new-session -d -s Hasse
+    command tmux switch-client -t Hasse
+  else
+    command tmux new-session -A -s Hasse
+  fi
+}
