@@ -1,11 +1,11 @@
 # tmux
 
-omerxx-style tmux with a hand-rolled Nord status bar. Stow package: symlinked to
+omerxx-style tmux with a hand-rolled TokyoNight Night status bar. Stow package: symlinked to
 `~/.config/tmux/`.
 
 | File | Contents |
 | --- | --- |
-| `tmux.conf` | Options, Nord palette, status bar, plugins |
+| `tmux.conf` | Options, TokyoNight palette, status bar, plugins |
 | `tmux.reset.conf` | Keybindings (sourced first) |
 
 ## Install
@@ -94,6 +94,6 @@ auto-saved and restored on start (continuum).
 
 Top of the screen. Left: session (green, red while prefix is held). Middle:
 windows as `name █N`, current one in frost blue, zoom icon when zoomed. Right:
-current directory. Colors are `@nord0`–`@nord15` user options in `tmux.conf`.
+current directory. Colors are `@tn_*` user options in `tmux.conf`.
 
 Needs a Nerd Font (Ghostty uses MesloLGS Nerd Font Mono).
