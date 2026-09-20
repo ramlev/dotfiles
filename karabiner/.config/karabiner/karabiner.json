@@ -95,6 +95,19 @@
                         ]
                     },
                     {
+                        "description": "Hyper + G - Ghostty",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "g",
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
+                                },
+                                "to": [{ "shell_command": "osascript -e 'if application \"Ghostty\" is running then\n  tell application \"Ghostty\"\n    activate\n    new window\n  end tell\nelse\n  tell application \"Ghostty\" to activate\nend if'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Hyper + I - iTerm2",
                         "manipulators": [
                             {
