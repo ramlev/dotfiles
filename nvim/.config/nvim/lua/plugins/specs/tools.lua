@@ -27,11 +27,24 @@ return {
       local telescope = require('telescope')
       local actions   = require('telescope.actions')
 
+      -- Excluded in rg itself, so huge dirs (Drupal's sites/*/files can hold
+      -- 500k+ uploads) are never walked, even when they aren't gitignored.
+      local ignore_globs = {
+        '--glob', '!**/.git/*',
+        '--glob', '!**/sites/*/files/*',
+        '--glob', '!**/node_modules/*',
+        '--glob', '!**/var/cache/*',
+      }
+
       telescope.setup({
         defaults = {
           prompt_prefix   = ' ',
           selection_caret = ' ',
           path_display    = { 'smart' },
+          vimgrep_arguments = vim.list_extend({
+            'rg', '--color=never', '--no-heading', '--with-filename',
+            '--line-number', '--column', '--smart-case', '--hidden',
+          }, ignore_globs),
           mappings = {
             i = {
               ['<C-k>'] = actions.move_selection_previous,
@@ -42,7 +55,9 @@ return {
           },
         },
         pickers = {
-          find_files = { hidden = true },
+          find_files = {
+            find_command = vim.list_extend({ 'rg', '--files', '--color=never', '--hidden' }, ignore_globs),
+          },
         },
       })
 

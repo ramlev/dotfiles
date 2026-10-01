@@ -33,6 +33,7 @@ require('lazy').setup({
     { import = 'plugins.specs.editor' },
     { import = 'plugins.specs.lsp' },
     { import = 'plugins.specs.tools' },
+    { import = 'plugins.specs.dev' },
   },
   defaults = { lazy = true },
   install = { colorscheme = { 'tokyonight', 'habamax' } },

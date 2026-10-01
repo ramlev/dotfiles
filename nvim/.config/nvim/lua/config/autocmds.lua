@@ -19,9 +19,12 @@ M.setup = function()
     group = trim_group,
     pattern = '*',
     callback = function()
-      local pos = vim.api.nvim_win_get_cursor(0)
-      vim.cmd([[%s/\s\+$//e]])
-      vim.api.nvim_win_set_cursor(0, pos)
+      if not vim.bo.modifiable then
+        return
+      end
+      local view = vim.fn.winsaveview()
+      vim.cmd([[keeppatterns %s/\s\+$//e]])
+      vim.fn.winrestview(view)
     end,
   })
 

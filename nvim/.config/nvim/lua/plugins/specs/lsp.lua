@@ -23,14 +23,18 @@ return {
 				"luadoc",
 				"markdown",
 				"markdown_inline",
+				"php",
+				"phpdoc",
 				"python",
 				"query",
 				"regex",
 				"toml",
 				"tsx",
+				"twig",
 				"typescript",
 				"vim",
 				"vimdoc",
+				"xml",
 				"yaml",
 			}
 			-- Async, no-op for already-installed parsers.
@@ -115,13 +119,21 @@ return {
 				"html",
 				"cssls",
 				"bashls",
+				"intelephense",
+				"twiggy_language_server",
 				-- Formatters
 				"stylua",
 				"prettier",
 				"black",
+				"php-cs-fixer",
+				"phpcbf",
 				-- Linters
 				"eslint_d",
 				"shellcheck",
+				"phpstan",
+				"phpcs",
+				-- Debug adapters
+				"php-debug-adapter",
 			},
 		},
 	},
@@ -134,6 +146,7 @@ return {
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			"saghen/blink.cmp",
 			{ "j-hui/fidget.nvim", opts = {} }, -- LSP progress indicator
 		},
 		config = function()
@@ -168,7 +181,7 @@ return {
 
 					-- Highlight references on cursor hold
 					local client = vim.lsp.get_client_by_id(event.data.client_id)
-					if client and client.supports_method("textDocument/documentHighlight") then
+					if client and client:supports_method("textDocument/documentHighlight") then
 						local hl_group = vim.api.nvim_create_augroup("LspDocumentHighlight", { clear = false })
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
@@ -184,10 +197,13 @@ return {
 				end,
 			})
 
-			-- Capabilities (extended by blink.cmp / nvim-cmp if present)
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			-- Completion capabilities from blink.cmp, applied to every server
+			vim.lsp.config("*", {
+				capabilities = require("blink.cmp").get_lsp_capabilities(),
+			})
 
-			-- Per-server settings
+			-- Per-server settings. mason-lspconfig v2 enables installed servers
+			-- via vim.lsp.enable(), so settings must go through vim.lsp.config().
 			local servers = {
 				lua_ls = {
 					settings = {
@@ -199,6 +215,49 @@ return {
 						},
 					},
 				},
+				intelephense = {
+					-- Root at the composer project (nearest vendor/autoload.php), not the
+					-- nearest .git: custom module dirs are often separate repos, which would
+					-- leave core, contrib and vendor unindexed.
+					root_dir = function(bufnr, on_dir)
+						local fname = vim.api.nvim_buf_get_name(bufnr)
+						for dir in vim.fs.parents(fname) do
+							if vim.uv.fs_stat(dir .. "/vendor/autoload.php") then
+								return on_dir(dir)
+							end
+						end
+						on_dir(vim.fs.root(bufnr, { "composer.json", ".git" }) or vim.fs.dirname(fname))
+					end,
+					init_options = {
+						-- Accepts the key itself or an absolute path to a file holding it
+						licenceKey = vim.fn.expand("~/intelephense/licence.txt"),
+					},
+					settings = {
+						intelephense = {
+							files = {
+								maxSize = 5000000, -- Drupal core has some large files
+								associations = {
+									"*.php",
+									"*.module",
+									"*.inc",
+									"*.install",
+									"*.theme",
+									"*.profile",
+									"*.engine",
+									"*.test",
+								},
+								exclude = {
+									"**/.git/**",
+									"**/node_modules/**",
+									"**/web/sites/*/files/**",
+									"**/docroot/sites/*/files/**",
+									"**/var/cache/**",
+								},
+							},
+						},
+					},
+				},
+				twiggy_language_server = {},
 				pyright = {},
 				ts_ls = {},
 				jsonls = {},
@@ -207,15 +266,61 @@ return {
 				bashls = {},
 			}
 
+			for name, config in pairs(servers) do
+				vim.lsp.config(name, config)
+			end
+
+			-- Full re-index, for when the file watcher misses a big composer install/update
+			vim.api.nvim_create_user_command("IntelephenseReindex", function()
+				for _, client in ipairs(vim.lsp.get_clients({ name = "intelephense" })) do
+					local bufs = vim.tbl_keys(client.attached_buffers)
+					local config = vim.deepcopy(client.config)
+					config.init_options = vim.tbl_extend("force", config.init_options or {}, { clearCache = true })
+					client:stop()
+					vim.wait(5000, function()
+						return client:is_stopped()
+					end)
+					for _, buf in ipairs(bufs) do
+						vim.lsp.start(config, { bufnr = buf })
+					end
+				end
+			end, { desc = "Clear intelephense cache and re-index the workspace" })
+
 			require("mason-lspconfig").setup({
 				ensure_installed = vim.tbl_keys(servers),
-				handlers = {
-					function(server_name)
-						local config = servers[server_name] or {}
-						config.capabilities = capabilities
-						require("lspconfig")[server_name].setup(config)
-					end,
-				},
+				automatic_enable = true,
+			})
+		end,
+	},
+
+	-- Linting (things the LSP doesn't cover: phpstan, phpcs)
+	{
+		"mfussenegger/nvim-lint",
+		event = { "BufReadPost", "BufWritePost" },
+		config = function()
+			local lint = require("lint")
+
+			-- Only run PHP linters when the project is configured for them,
+			-- from the project root so autoloading and config files resolve.
+			local php_linters = {
+				phpstan = { "phpstan.neon", "phpstan.neon.dist", "phpstan.dist.neon" },
+				phpcs = { "phpcs.xml", "phpcs.xml.dist", ".phpcs.xml", ".phpcs.xml.dist" },
+			}
+
+			local group = vim.api.nvim_create_augroup("Lint", { clear = true })
+			vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+				group = group,
+				callback = function(args)
+					if vim.bo[args.buf].filetype ~= "php" then
+						return
+					end
+					for linter, markers in pairs(php_linters) do
+						local root = vim.fs.root(args.buf, markers)
+						if root then
+							lint.try_lint(linter, { cwd = root })
+						end
+					end
+				end,
 			})
 		end,
 	},
@@ -229,26 +334,77 @@ return {
 			{
 				"<leader>lf",
 				function()
-					require("conform").format({ async = true, lsp_fallback = true })
+					require("conform").format({ async = true, lsp_format = "fallback" })
 				end,
 				desc = "Format buffer",
 			},
 		},
-		opts = {
-			formatters_by_ft = {
-				lua = { "stylua" },
-				python = { "black" },
-				javascript = { "prettier" },
-				typescript = { "prettier" },
-				jsx = { "prettier" },
-				tsx = { "prettier" },
-				json = { "prettier" },
-				yaml = { "prettier" },
-				markdown = { "prettier" },
-				css = { "prettier" },
-				html = { "prettier" },
-			},
-			format_on_save = { timeout_ms = 500, lsp_fallback = true },
-		},
+		opts = function()
+			local util = require("conform.util")
+			local phpcs_markers = { "phpcs.xml", "phpcs.xml.dist", ".phpcs.xml", ".phpcs.xml.dist" }
+			local cs_fixer_markers = { ".php-cs-fixer.php", ".php-cs-fixer.dist.php" }
+			local drupal_markers = { "web/core/lib/Drupal.php", "docroot/core/lib/Drupal.php", "core/lib/Drupal.php" }
+
+			-- vim.fs.root() only matches plain names, so nested paths are checked by hand
+			local function is_drupal(bufnr)
+				for dir in vim.fs.parents(vim.api.nvim_buf_get_name(bufnr)) do
+					for _, marker in ipairs(drupal_markers) do
+						if vim.uv.fs_stat(dir .. "/" .. marker) then
+							return true
+						end
+					end
+				end
+				return false
+			end
+
+			-- Pick the PHP formatter the project is configured for. Drupal projects
+			-- without a phpcs config are left alone rather than reformatted to PSR-12.
+			local function php_formatters(bufnr)
+				if vim.fs.root(bufnr, phpcs_markers) then
+					return { "phpcbf" }
+				end
+				if vim.fs.root(bufnr, cs_fixer_markers) then
+					return { "php_cs_fixer" }
+				end
+				if is_drupal(bufnr) then
+					return {}
+				end
+				return { "php_cs_fixer_psr12" }
+			end
+
+			return {
+				formatters_by_ft = {
+					lua = { "stylua" },
+					python = { "black" },
+					javascript = { "prettier" },
+					typescript = { "prettier" },
+					jsx = { "prettier" },
+					tsx = { "prettier" },
+					json = { "prettier" },
+					yaml = { "prettier" },
+					markdown = { "prettier" },
+					css = { "prettier" },
+					html = { "prettier" },
+					php = php_formatters,
+				},
+				formatters = {
+					-- Run from the project root so phpcs.xml is picked up
+					phpcbf = { cwd = util.root_file(phpcs_markers) },
+					-- Projects without a php-cs-fixer config: plain PSR-12. Explicit
+					-- rules also stop php-cs-fixer from generating a config + .gitignore.
+					php_cs_fixer_psr12 = vim.tbl_extend("force", require("conform.formatters.php_cs_fixer"), {
+						args = { "fix", "--rules=@PSR12", "--using-cache=no", "$FILENAME" },
+					}),
+				},
+				format_on_save = function(bufnr)
+					local ft = vim.bo[bufnr].filetype
+					if ft == "php" then
+						-- php-cs-fixer/phpcbf are slow; never fall back to intelephense formatting
+						return { timeout_ms = 3000, lsp_format = "never" }
+					end
+					return { timeout_ms = 500, lsp_format = "fallback" }
+				end,
+			}
+		end,
 	},
 }

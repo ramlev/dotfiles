@@ -75,6 +75,8 @@ return {
         { '<leader>s', group = 'Search' },
         { '<leader>S', group = 'Splits' },
         { '<leader>t', group = 'Terminal/Trouble' },
+        { '<leader>T', group = 'Test' },
+        { '<leader>x', group = 'Debug' },
       })
     end,
   },

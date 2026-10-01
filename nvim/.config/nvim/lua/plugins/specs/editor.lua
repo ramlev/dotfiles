@@ -1,4 +1,21 @@
 return {
+  -- Completion (LSP, snippets, buffer, path)
+  {
+    'saghen/blink.cmp',
+    version = '1.*', -- release tags ship prebuilt fuzzy-matcher binaries
+    event = { 'InsertEnter', 'CmdlineEnter' },
+    opts = {
+      keymap = { preset = 'enter' }, -- <CR> accept, <C-n>/<C-p> select, <C-space> open
+      completion = {
+        documentation = { auto_show = true, auto_show_delay_ms = 300 },
+      },
+      signature = { enabled = true },
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+      },
+    },
+  },
+
   -- Auto-close brackets, quotes, etc.
   {
     'windwp/nvim-autopairs',

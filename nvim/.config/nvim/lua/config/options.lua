@@ -72,6 +72,19 @@ M.setup = function()
   opt.showmode = false   -- lualine shows the mode
   opt.cmdheight = 1
   opt.conceallevel = 0
+
+  -- Drupal PHP files with non-.php extensions
+  vim.filetype.add({
+    extension = {
+      module = 'php',
+      inc = 'php',
+      install = 'php',
+      theme = 'php',
+      profile = 'php',
+      engine = 'php',
+      test = 'php',
+    },
+  })
 end
 
 return M
