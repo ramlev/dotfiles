@@ -54,6 +54,28 @@ return {
     },
   },
 
+  -- Open buffers as tabs along the top
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    event = 'VeryLazy',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    keys = {
+      { '<leader>bp', '<cmd>BufferLinePick<CR>',        desc = 'Pick buffer' },
+      { '<leader>bo', '<cmd>BufferLineCloseOthers<CR>', desc = 'Close other buffers' },
+      { '<leader>bP', '<cmd>BufferLineTogglePin<CR>',   desc = 'Pin buffer' },
+    },
+    opts = {
+      options = {
+        diagnostics = 'nvim_lsp',
+        always_show_bufferline = false,
+        offsets = {
+          { filetype = 'neo-tree', text = 'Files', highlight = 'Directory', separator = true },
+        },
+      },
+    },
+  },
+
   -- Keybinding hints popup
   {
     'folke/which-key.nvim',
