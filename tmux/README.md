@@ -33,7 +33,7 @@ Prefix is `C-a`. Everything below is `prefix` then the key unless noted.
 | `C-s` / `C-r` | Save / restore sessions (resurrect) |
 
 Inside sessionx: `ctrl-y` opens a zoxide dir as a new window. Sessions are
-auto-saved and restored on start (continuum).
+not restored on start; save/restore manually with resurrect.
 
 ### Windows
 
