@@ -28,6 +28,11 @@ return {
         comments = { italic = true },
         keywords = { italic = true },
       },
+      -- lualine's outer pill caps blend into StatusLine, keep it see-through too.
+      on_highlights = function(hl, c)
+        hl.StatusLine = { fg = c.fg_dark, bg = 'NONE' }
+        hl.StatusLineNC = { fg = c.comment, bg = 'NONE' }
+      end,
     },
     config = function(_, opts)
       require('tokyonight').setup(opts)

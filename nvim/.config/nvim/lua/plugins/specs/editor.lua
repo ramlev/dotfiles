@@ -49,8 +49,8 @@ return {
         end
 
         -- Navigation
-        map('n', ']h', gs.next_hunk,  'Next hunk')
-        map('n', '[h', gs.prev_hunk,  'Prev hunk')
+        map('n', ']h', function() gs.nav_hunk('next') end, 'Next hunk')
+        map('n', '[h', function() gs.nav_hunk('prev') end, 'Prev hunk')
 
         -- Actions
         map('n', '<leader>gs', gs.stage_hunk,        'Stage hunk')
@@ -69,13 +69,6 @@ return {
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', 'Select hunk')
       end,
     },
-  },
-
-  -- Comment toggling
-  {
-    'numToStr/Comment.nvim',
-    event = 'BufReadPost',
-    opts = {},
   },
 
   -- Detect indentation automatically

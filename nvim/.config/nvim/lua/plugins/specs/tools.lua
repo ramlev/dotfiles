@@ -16,7 +16,7 @@ return {
       { '<leader>sg', '<cmd>Telescope live_grep<CR>',               desc = 'Live grep' },
       { '<leader>sw', '<cmd>Telescope grep_string<CR>',             desc = 'Grep word under cursor' },
       { '<leader><space>', '<cmd>Telescope buffers<CR>',            desc = 'Open buffers' },
-      { '<leader>sh', '<cmd>Telescope help_tags<CR>',               desc = 'Help tags' },
+      { '<leader>sH', '<cmd>Telescope help_tags<CR>',               desc = 'Help tags' },
       { '<leader>sk', '<cmd>Telescope keymaps<CR>',                 desc = 'Keymaps' },
       { '<leader>sd', '<cmd>Telescope diagnostics<CR>',             desc = 'Diagnostics' },
       { '<leader>sr', '<cmd>Telescope oldfiles<CR>',                desc = 'Recent files' },

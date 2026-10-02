@@ -47,9 +47,7 @@ M.setup = function()
   map('v', '<', '<gv', { desc = 'Unindent' })
   map('v', '>', '>gv', { desc = 'Indent' })
 
-  -- Diagnostics
-  map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Prev diagnostic' })
-  map('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+  -- Diagnostics ([d / ]d are Neovim defaults)
   map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic float' })
   map('n', '<leader>dl', vim.diagnostic.setloclist, { desc = 'Diagnostic list' })
 
@@ -58,6 +56,12 @@ M.setup = function()
   map('n', '<leader>sh', '<cmd>split<CR>',  { desc = 'Split horizontal' })
   map('n', '<leader>se', '<C-w>=',          { desc = 'Equalize splits' })
   map('n', '<leader>sx', '<cmd>close<CR>',  { desc = 'Close split' })
+
+  -- Undo tree (bundled with Neovim 0.12, loaded on first use)
+  map('n', '<leader>u', function()
+    vim.cmd.packadd('nvim.undotree')
+    vim.cmd.Undotree()
+  end, { desc = 'Toggle undo tree' })
 end
 
 return M
