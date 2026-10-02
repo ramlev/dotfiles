@@ -103,7 +103,7 @@ function tmux() {
   fi
 
   if [[ -n "$TMUX" ]]; then
-    command tmux has-session -t Hasse2>/dev/null || command tmux new-session -d -s Hasse
+    command tmux has-session -t Hasse 2>/dev/null || command tmux new-session -d -s Hasse
     command tmux switch-client -t Hasse
   else
     command tmux new-session -A -s Hasse
