@@ -1,0 +1,244 @@
+#!/usr/bin/env bash
+# ~/.config/sketchybar/sketchybarrc — TokyoNight Night, mirrors tmux.conf.
+# Minimal: one filled pill on the left (AeroSpace mode, like the tmux session
+# pill), workspaces as plain text with the focused one in a soft pill, muted
+# info on the right.
+
+source "$CONFIG_DIR/colors.sh"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+FONT="MesloLGS Nerd Font Mono"
+
+# ── Bar ──────────────────────────────────────────────────────────────────
+# Height matches the notch row (37.5pt), which AeroSpace already keeps free.
+bar=(
+  position=top
+  height=37
+  color=$TN_BG
+  border_width=0
+  padding_left=14
+  padding_right=14
+  display=main
+  notch_width=200
+  shadow=off
+  sticky=on
+  topmost=off
+)
+sketchybar --bar "${bar[@]}"
+
+# ── Defaults ─────────────────────────────────────────────────────────────
+default=(
+  updates=when_shown
+  icon.font="$FONT:Bold:18.0"
+  label.font="$FONT:Regular:13.0"
+  icon.color=$TN_COMMENT
+  label.color=$TN_FG_DARK
+  icon.padding_left=0
+  icon.padding_right=6
+  label.padding_left=0
+  label.padding_right=0
+  padding_left=0
+  padding_right=0
+  background.height=24
+  background.corner_radius=12
+)
+sketchybar --default "${default[@]}"
+
+# ── Left: mode pill ──────────────────────────────────────────────────────
+# Accent: blue normally, red while AeroSpace is in service mode
+# (the equivalent of tmux's prefix-held red).
+mode=(
+  icon=R
+  icon.font="$FONT:Bold:13.0"
+  icon.color=$TN_BG
+  icon.padding_left=12
+  icon.padding_right=12
+  label.drawing=off
+  label.font="$FONT:Bold:13.0"
+  label.color=$TN_BG
+  label.padding_right=12
+  background.color=$TN_BLUE
+  padding_right=10
+  script="$PLUGIN_DIR/mode.sh"
+)
+sketchybar --add event aerospace_mode_change \
+           --add item mode left \
+           --set mode "${mode[@]}" \
+           --subscribe mode aerospace_mode_change
+
+# ── Left: workspaces ─────────────────────────────────────────────────────
+# "#I #W" like tmux windows: dim number, app name. Focused one gets the
+# gutter pill. Both states keep the same padding so the bar never shifts.
+sketchybar --add event aerospace_workspace_change
+for ws in $(aerospace list-workspaces --all); do
+  space=(
+    icon="$ws"
+    icon.font="$FONT:Bold:13.0"
+    icon.padding_left=10
+    label.padding_right=10
+    background.color=$TN_GUTTER
+    background.drawing=off
+    click_script="aerospace workspace $ws"
+  )
+  sketchybar --add item "space.$ws" left --set "space.$ws" "${space[@]}"
+done
+
+# One invisible controller redraws every workspace on any relevant event.
+sketchybar --add item spaces left \
+           --set spaces drawing=off updates=on script="$PLUGIN_DIR/aerospace.sh" \
+           --subscribe spaces aerospace_workspace_change front_app_switched \
+                              space_windows_change system_woke
+
+# ── Right: muted info (rightmost first) ──────────────────────────────────
+# Items with a popup (battery, volume, cpu, mem, net): click toggles it,
+# moving the mouse away closes it (plugins/popup.sh).
+popup=(
+  popup.align=right
+  popup.height=26
+  popup.y_offset=6
+  popup.background.color=$TN_BG_DARK
+  popup.background.border_color=$TN_GUTTER
+  popup.background.border_width=1
+  popup.background.corner_radius=10
+)
+
+# Popup rows: dim icon column on the left, value on the right.
+row=(
+  icon.color=$TN_COMMENT
+  icon.font="$FONT:Regular:13.0"
+  icon.width=110
+  icon.padding_left=14
+  label.color=$TN_FG
+  label.padding_right=14
+)
+title=(
+  icon.color=$TN_BLUE
+  icon.font="$FONT:Bold:13.0"
+  icon.padding_left=14
+  label.color=$TN_COMMENT
+  label.padding_left=10
+  label.padding_right=14
+)
+link=(
+  icon.color=$TN_CYAN
+  icon.padding_left=14
+  label.color=$TN_CYAN
+  label.padding_right=14
+)
+graph=(
+  icon.drawing=off
+  label.drawing=off
+  graph.line_width=1.5
+  padding_left=14
+  padding_right=14
+  background.height=40
+  background.drawing=on
+  background.color=$TN_BG_HL
+  background.corner_radius=6
+)
+
+# add_rows <parent> "<key>:<Label>" ... -> plain popup rows <parent>.<key>
+add_rows() {
+  local parent=$1 r; shift
+  for r in "$@"; do
+    sketchybar --add item "$parent.${r%%:*}" "popup.$parent" \
+               --set "$parent.${r%%:*}" "${row[@]}" icon="${r#*:}"
+  done
+}
+
+# add_top <parent> -> "Top processes" title plus five rows <parent>.top.N
+add_top() {
+  sketchybar --add item "$1.toptitle" "popup.$1" \
+             --set "$1.toptitle" "${title[@]}" icon="Top processes" label.drawing=off
+  for i in 1 2 3 4 5; do
+    sketchybar --add item "$1.top.$i" "popup.$1" \
+               --set "$1.top.$i" "${row[@]}" icon.width=70 label.color=$TN_FG_DARK
+  done
+}
+
+# add_link <parent> <icon> <label> <command>
+add_link() {
+  sketchybar --add item "$1.open" "popup.$1" \
+             --set "$1.open" "${link[@]}" icon="$2" label="$3" \
+                   click_script="$4; sketchybar --set $1 popup.drawing=off"
+}
+
+sketchybar --add item clock right \
+           --set clock icon=󰥔 update_freq=10 script="$PLUGIN_DIR/clock.sh" \
+                       padding_left=18 \
+           --add item date right \
+           --set date icon=󰃭 update_freq=60 script="$PLUGIN_DIR/date.sh" \
+                      padding_left=18
+
+# ── Right: battery ───────────────────────────────────────────────────────
+sketchybar --add item battery right \
+           --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+                         padding_left=18 "${popup[@]}" \
+           --subscribe battery system_woke power_source_change \
+                               mouse.clicked mouse.exited.global
+add_rows battery "status:Status" "remaining:Time" "health:Health" \
+                 "cycles:Cycles" "charger:Charger"
+add_link battery 󰂄 "Battery settings" \
+         "open 'x-apple.systempreferences:com.apple.Battery-Settings.extension'"
+
+# ── Right: volume ────────────────────────────────────────────────────────
+sketchybar --add item volume right \
+           --set volume script="$PLUGIN_DIR/volume.sh" padding_left=18 "${popup[@]}" \
+           --subscribe volume volume_change mouse.clicked mouse.exited.global \
+           --add slider volume.slider popup.volume 200 \
+           --set volume.slider script="$PLUGIN_DIR/volume.sh" \
+                               icon.drawing=off label.drawing=off \
+                               padding_left=14 padding_right=14 \
+                               slider.highlight_color=$TN_BLUE \
+                               slider.background.height=6 \
+                               slider.background.corner_radius=3 \
+                               slider.background.color=$TN_GUTTER \
+                               slider.knob=󰝤 slider.knob.color=$TN_FG \
+                               slider.knob.font="$FONT:Regular:16.0" \
+           --subscribe volume.slider mouse.clicked
+add_rows volume "device:Output"
+sketchybar --add item volume.mute popup.volume \
+           --set volume.mute "${link[@]}" \
+                 click_script="osascript -e 'set volume output muted not (output muted of (get volume settings))'; sketchybar --trigger volume_change"
+add_link volume 󰓃 "Sound settings" \
+         "open 'x-apple.systempreferences:com.apple.Sound-Settings.extension'"
+
+# ── Right: CPU ───────────────────────────────────────────────────────────
+sketchybar --add item cpu right \
+           --set cpu icon=󰻠 icon.font="$FONT:Bold:20.0" update_freq=3 \
+                     padding_left=18 script="$PLUGIN_DIR/cpu.sh" "${popup[@]}" \
+           --subscribe cpu mouse.clicked mouse.exited.global \
+           --add item cpu.header popup.cpu \
+           --set cpu.header "${title[@]}" icon="$(sysctl -n machdep.cpu.brand_string)" \
+                 label="$(sysctl -n hw.perflevel0.physicalcpu)P + $(sysctl -n hw.perflevel1.physicalcpu)E cores" \
+           --add graph cpu.graph popup.cpu 230 \
+           --set cpu.graph "${graph[@]}" graph.color=$TN_BLUE graph.fill_color=0x407aa2f7
+add_rows cpu "user:User" "sys:System" "idle:Idle" "load:Load avg"
+add_top cpu
+add_link cpu 󰄪 "Open btop" "$PLUGIN_DIR/btop.sh"
+
+# ── Right: memory ────────────────────────────────────────────────────────
+sketchybar --add item mem right \
+           --set mem icon=󰍛 update_freq=5 padding_left=18 \
+                     script="$PLUGIN_DIR/mem.sh" "${popup[@]}" \
+           --subscribe mem mouse.clicked mouse.exited.global \
+           --add item mem.header popup.mem \
+           --set mem.header "${title[@]}" icon="Memory" \
+                 label="$(( $(sysctl -n hw.memsize) / 1073741824 )) GB unified" \
+           --add graph mem.graph popup.mem 230 \
+           --set mem.graph "${graph[@]}" graph.color=$TN_MAGENTA graph.fill_color=0x40bb9af7
+add_rows mem "used:Used" "app:App" "wired:Wired" "comp:Compressed" \
+             "cache:Cached" "swap:Swap" "pressure:Pressure"
+add_top mem
+add_link mem 󰍹 "Open Activity Monitor" "open -a 'Activity Monitor'"
+
+# ── Right: network ───────────────────────────────────────────────────────
+sketchybar --add item net right \
+           --set net update_freq=2 padding_left=18 \
+                     script="$PLUGIN_DIR/net.sh" "${popup[@]}" \
+           --subscribe net mouse.clicked mouse.exited.global system_woke
+add_rows net "iface:Interface" "ip:Local IP" "public:External IP" "vpn:VPN" \
+             "down:Download" "up:Upload"
+add_link net 󰛳 "Network settings" \
+         "open 'x-apple.systempreferences:com.apple.Network-Settings.extension'"
+
+sketchybar --update
