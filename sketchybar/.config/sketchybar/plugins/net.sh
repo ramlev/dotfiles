@@ -8,7 +8,8 @@ popup_events
 
 iface="$(route -n get default 2>/dev/null | awk '/interface:/ {print $2}')"
 if [ -z "$iface" ]; then
-  sketchybar --set "$NAME" icon=󰖪 icon.color=$TN_RED label="offline"
+  sketchybar --set "$NAME" icon=󰖪 icon.color=$TN_RED \
+             --set net.tx drawing=off --set net.rx drawing=off
   exit 0
 fi
 
@@ -27,11 +28,12 @@ state="${TMPDIR:-/tmp}/sketchybar_net"
 read -r p_iface p_rx p_tx p_now 2>/dev/null < "$state"
 printf '%s %s %s %s\n' "$iface" "$rx" "$tx" "$now" > "$state"
 
-rate() {  # bytes delta, seconds -> 1.2M / 80K / 0K
+rate() {  # bytes delta, seconds -> 1.2 MBps / 80 kBps / 512 Bps
   awk -v b="$1" -v s="$2" 'BEGIN {
     r = (s > 0 && b > 0) ? b / s : 0
-    if (r >= 1048576) printf "%.1fM", r / 1048576
-    else              printf "%.0fK", r / 1024
+    if      (r >= 1048576) printf "%.1f MBps", r / 1048576
+    else if (r >= 1024)    printf "%.0f kBps", r / 1024
+    else                   printf "%.0f Bps", r
   }'
 }
 if [ "$p_iface" = "$iface" ] && [ -n "$p_now" ]; then
@@ -39,10 +41,12 @@ if [ "$p_iface" = "$iface" ] && [ -n "$p_now" ]; then
   down="$(rate $((rx - p_rx)) "$dt")"
   up="$(rate $((tx - p_tx)) "$dt")"
 else
-  down=0K up=0K
+  down="0 Bps" up="0 Bps"
 fi
 
-sketchybar --set "$NAME" icon="$icon" icon.color=$TN_COMMENT label="↓$down ↑$up"
+sketchybar --set "$NAME" icon="$icon" icon.color=$TN_COMMENT \
+           --set net.tx label="↑$up" drawing=on \
+           --set net.rx label="↓$down" drawing=on
 
 popup_open || exit 0
 
@@ -67,5 +71,5 @@ sketchybar --set net.iface  label="${port:-Tunnel} ($iface)" \
            --set net.public label="${ext:-–}" \
            --set net.vpn    label="${vpn:-off}" \
                             label.color=$([ -n "$vpn" ] && echo $TN_GREEN || echo $TN_COMMENT) \
-           --set net.down   label="$down/s" \
-           --set net.up     label="$up/s"
+           --set net.down   label="$down" \
+           --set net.up     label="$up"

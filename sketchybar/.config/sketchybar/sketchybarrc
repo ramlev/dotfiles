@@ -39,7 +39,7 @@ default=(
   padding_left=0
   padding_right=0
   background.height=24
-  background.corner_radius=12
+  background.corner_radius=6
 )
 sketchybar --default "${default[@]}"
 
@@ -164,15 +164,23 @@ add_link() {
 
 sketchybar --add item clock right \
            --set clock icon=󰥔 update_freq=10 script="$PLUGIN_DIR/clock.sh" \
-                       padding_left=18 \
+                       padding_left=14 label.padding_right=12 \
            --add item date right \
            --set date icon=󰃭 update_freq=60 script="$PLUGIN_DIR/date.sh" \
-                      padding_left=18
+                      padding_left=0 icon.padding_left=10
+
+# Outlined pill around date + clock.
+sketchybar --add bracket datetime date clock \
+           --set datetime background.color=$TN_TRANSPARENT \
+                          background.border_color=$TN_GUTTER \
+                          background.border_width=1 \
+                          background.height=24 \
+                          background.corner_radius=6
 
 # ── Right: battery ───────────────────────────────────────────────────────
 sketchybar --add item battery right \
-           --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
-                         padding_left=18 "${popup[@]}" \
+           --set battery icon.font="$FONT:Bold:26.0" update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+                         padding_left=18 padding_right=14 "${popup[@]}" \
            --subscribe battery system_woke power_source_change \
                                mouse.clicked mouse.exited.global
 add_rows battery "status:Status" "remaining:Time" "health:Health" \
@@ -182,7 +190,7 @@ add_link battery 󰂄 "Battery settings" \
 
 # ── Right: volume ────────────────────────────────────────────────────────
 sketchybar --add item volume right \
-           --set volume script="$PLUGIN_DIR/volume.sh" padding_left=18 "${popup[@]}" \
+           --set volume script="$PLUGIN_DIR/volume.sh" padding_left=18 padding_right=14 "${popup[@]}" \
            --subscribe volume volume_change mouse.clicked mouse.exited.global \
            --add slider volume.slider popup.volume 200 \
            --set volume.slider script="$PLUGIN_DIR/volume.sh" \
@@ -232,8 +240,22 @@ add_top mem
 add_link mem 󰍹 "Open Activity Monitor" "open -a 'Activity Monitor'"
 
 # ── Right: network ───────────────────────────────────────────────────────
-sketchybar --add item net right \
-           --set net update_freq=2 padding_left=18 \
+# Rates stacked right of the icon, left-aligned against it: up (red) on top
+# with width=0 so down (blue) is drawn in the same slot underneath.
+# net.sh fills both.
+rate=(
+  icon.drawing=off
+  label.font="$FONT:Bold:10.0"
+  label.width=64
+  label.align=left
+  click_script="sketchybar --set net popup.drawing=toggle"
+)
+sketchybar --add item net.tx right \
+           --set net.tx "${rate[@]}" label.color=$TN_RED y_offset=6 width=0 \
+           --add item net.rx right \
+           --set net.rx "${rate[@]}" label.color=$TN_BLUE y_offset=-6 \
+           --add item net right \
+           --set net icon.font="$FONT:Bold:22.0" icon.padding_right=2 update_freq=2 padding_left=18 label.drawing=off \
                      script="$PLUGIN_DIR/net.sh" "${popup[@]}" \
            --subscribe net mouse.clicked mouse.exited.global system_woke
 add_rows net "iface:Interface" "ip:Local IP" "public:External IP" "vpn:VPN" \

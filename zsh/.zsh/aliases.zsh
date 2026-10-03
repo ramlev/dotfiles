@@ -53,11 +53,14 @@ alias gr='git remote'
 alias gre='git reset'
 alias uncommit="git reset --soft HEAD~1"
 
+alias lg=lazygit
 # Fast open
 alias o="open ."
 
 # Eza
-alias l="eza -l --icons --git -a"
+alias ls="eza --icons=always --group-directories-first"
+alias la='eza --all --icons=always --group-directories-first'
+alias l="eza --long --icons=always --git --all"
 alias lt="eza --tree --level=2 --long --icons --git"
 alias ltree="eza --tree --level=2  --icons --git"
 

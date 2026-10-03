@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Muted like the rest; yellow below 30%, red below 15% (tmux's bell/activity dots).
+# Muted like the rest; orange below 35%, red below 15% (tmux's bell/activity dots).
 # Click for status, time remaining, health, cycle count and charger.
 source "$CONFIG_DIR/colors.sh"
 source "$CONFIG_DIR/plugins/popup.sh"
@@ -9,18 +9,18 @@ info="$(pmset -g batt)"
 pct="$(printf '%s' "$info" | grep -Eo '[0-9]+%' | tr -d '%')"
 [ -z "$pct" ] && exit 0
 
+# Horizontal (Font Awesome) battery glyphs.
 case "$pct" in
-  100|9[0-9]) icon=󰁹 ;;
-  [7-8][0-9]) icon=󰂁 ;;
-  [5-6][0-9]) icon=󰁿 ;;
-  [3-4][0-9]) icon=󰁽 ;;
-  [1-2][0-9]) icon=󰁻 ;;
-  *)          icon=󰂎 ;;
+  100|9[0-9]|8[0-9]) icon= ;;
+  [6-7][0-9])        icon= ;;
+  [3-5][0-9])        icon= ;;
+  [1-2][0-9])        icon= ;;
+  *)                 icon= ;;
 esac
-printf '%s' "$info" | grep -q 'AC Power' && icon=󰂄
+printf '%s' "$info" | grep -q 'AC Power' && icon=
 
 color=$TN_COMMENT
-[ "$pct" -lt 30 ] && color=$TN_YELLOW
+[ "$pct" -lt 35 ] && color=$TN_ORANGE
 [ "$pct" -lt 15 ] && color=$TN_RED
 
 sketchybar --set "$NAME" icon="$icon" icon.color=$color label="$pct%"
