@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # ~/.config/sketchybar/sketchybarrc — TokyoNight Night, mirrors tmux.conf.
-# Minimal: one filled pill on the left (AeroSpace mode, like the tmux session
-# pill), workspaces as plain text with the focused one in a soft pill, muted
-# info on the right.
+# Minimal: one filled pill on the left (like the tmux session pill), macOS
+# desktops as plain text with the focused one in a soft pill, muted info on
+# the right.
 
 source "$CONFIG_DIR/colors.sh"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 FONT="MesloLGS Nerd Font Mono"
 
 # ── Bar ──────────────────────────────────────────────────────────────────
-# Height matches the notch row (37.5pt), which AeroSpace already keeps free.
+# Height matches the notch row (37.5pt).
 bar=(
   position=top
   height=37
@@ -43,9 +43,8 @@ default=(
 )
 sketchybar --default "${default[@]}"
 
-# ── Left: mode pill ──────────────────────────────────────────────────────
-# Accent: blue normally, red while AeroSpace is in service mode
-# (the equivalent of tmux's prefix-held red).
+# ── Left: accent pill ────────────────────────────────────────────────────
+# Static blue pill, like the tmux session pill.
 mode=(
   icon=R
   icon.font="$FONT:Bold:13.0"
@@ -53,40 +52,35 @@ mode=(
   icon.padding_left=12
   icon.padding_right=12
   label.drawing=off
-  label.font="$FONT:Bold:13.0"
-  label.color=$TN_BG
-  label.padding_right=12
   background.color=$TN_BLUE
   padding_right=10
-  script="$PLUGIN_DIR/mode.sh"
 )
-sketchybar --add event aerospace_mode_change \
-           --add item mode left \
-           --set mode "${mode[@]}" \
-           --subscribe mode aerospace_mode_change
+sketchybar --add item mode left \
+           --set mode "${mode[@]}"
 
-# ── Left: workspaces ─────────────────────────────────────────────────────
+# ── Left: desktops ───────────────────────────────────────────────────────
 # "#I #W" like tmux windows: dim number, app name. Focused one gets the
 # gutter pill. Both states keep the same padding so the bar never shifts.
-sketchybar --add event aerospace_workspace_change
-for ws in $(aerospace list-workspaces --all); do
+# Native macOS desktops (Mission Control spaces); sketchybar only draws the
+# ones that exist, so 10 slots cover any number of desktops. Click walks to
+# the desktop with ctrl+arrow (plugins/space.sh).
+for sid in {1..10}; do
   space=(
-    icon="$ws"
+    space="$sid"
+    icon="$sid"
     icon.font="$FONT:Bold:13.0"
     icon.padding_left=10
     label.padding_right=10
     background.color=$TN_GUTTER
     background.drawing=off
-    click_script="aerospace workspace $ws"
+    updates=on
+    script="$PLUGIN_DIR/space.sh"
   )
-  sketchybar --add item "space.$ws" left --set "space.$ws" "${space[@]}"
+  sketchybar --add space "space.$sid" left \
+             --set "space.$sid" "${space[@]}" \
+             --subscribe "space.$sid" space_change space_windows_change \
+                                      front_app_switched mouse.clicked
 done
-
-# One invisible controller redraws every workspace on any relevant event.
-sketchybar --add item spaces left \
-           --set spaces drawing=off updates=on script="$PLUGIN_DIR/aerospace.sh" \
-           --subscribe spaces aerospace_workspace_change front_app_switched \
-                              space_windows_change system_woke
 
 # ── Right: muted info (rightmost first) ──────────────────────────────────
 # Items with a popup (battery, volume, cpu, mem, net): click toggles it,
@@ -167,7 +161,22 @@ sketchybar --add item clock right \
                        padding_left=14 label.padding_right=12 \
            --add item date right \
            --set date icon=󰃭 update_freq=60 script="$PLUGIN_DIR/date.sh" \
-                      padding_left=0 icon.padding_left=10
+                      padding_left=0 icon.padding_left=10 "${popup[@]}" \
+           --subscribe date mouse.clicked mouse.exited.global
+
+# Date popup: today and the next three days, each a title row plus up to six
+# event rows: a dot in the calendar's colour, then time and title. date.sh
+# fills them and hides the unused ones.
+for d in 0 1 2 3; do
+  sketchybar --add item "date.d$d" popup.date \
+             --set "date.d$d" "${title[@]}"
+  for i in 1 2 3 4 5 6; do
+    sketchybar --add item "date.d$d.$i" popup.date \
+               --set "date.d$d.$i" "${row[@]}" icon=● icon.width=dynamic \
+                     icon.padding_right=8 label.max_chars=53 drawing=off
+  done
+done
+add_link date 󰃭 "Open Calendar" "open -a Calendar"
 
 # Outlined pill around date + clock.
 sketchybar --add bracket datetime date clock \
@@ -262,5 +271,38 @@ add_rows net "iface:Interface" "ip:Local IP" "public:External IP" "vpn:VPN" \
              "down:Download" "up:Upload"
 add_link net 󰛳 "Network settings" \
          "open 'x-apple.systempreferences:com.apple.Network-Settings.extension'"
+
+# ── Right: weather ───────────────────────────────────────────────────────
+sketchybar --add item weather right \
+           --set weather icon.font="$FONT:Bold:20.0" update_freq=900 padding_left=18 \
+                         script="$PLUGIN_DIR/weather.sh" "${popup[@]}" \
+           --subscribe weather mouse.clicked mouse.exited.global system_woke \
+           --add item weather.header popup.weather \
+           --set weather.header "${title[@]}"
+add_rows weather "feels:Feels like" "wind:Wind" "humidity:Humidity" \
+                 "d0:Today" "d1:Tomorrow" "d2:" "d3:"
+add_link weather 󰖙 "Open Weather" "open -a Weather"
+
+# ── Right: media ─────────────────────────────────────────────────────────
+# Spotify only. Hidden until a track is loaded, so it keeps updating while
+# hidden (updates=on) and is driven by Spotify's playback notification.
+media_link() {  # <name> <icon> <label> <spotify command>
+  sketchybar --add item "media.$1" popup.media \
+             --set "media.$1" "${link[@]}" icon="$2" label="$3" \
+                   click_script="osascript -e 'tell application \"Spotify\" to $4'"
+}
+sketchybar --add event spotify_change com.spotify.client.PlaybackStateChanged \
+           --add item media right \
+           --set media icon=󰓇 icon.font="$FONT:Bold:20.0" label.max_chars=32 \
+                       padding_left=18 drawing=off updates=on \
+                       script="$PLUGIN_DIR/media.sh" "${popup[@]}" \
+           --subscribe media spotify_change mouse.clicked mouse.exited.global \
+           --add item media.track popup.media \
+           --set media.track "${title[@]}"
+add_rows media "album:Album"
+media_link toggle 󰏤 "Pause" "playpause"
+media_link next 󰒭 "Next" "next track"
+media_link prev 󰒮 "Previous" "previous track"
+add_link media 󰓇 "Open Spotify" "open -a Spotify"
 
 sketchybar --update

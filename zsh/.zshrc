@@ -84,3 +84,4 @@ eval "$(zoxide init --cmd z zsh)"
 _cache_eval "fnm"      fnm env --use-on-cd
 _cache_eval "fzf"      fzf --zsh
 _cache_eval "starship" starship init zsh
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

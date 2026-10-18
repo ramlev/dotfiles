@@ -3,7 +3,8 @@
 
 # ── Theme ────────────────────────────────────────────────────────────────
 # Always dark TokyoNight Night, regardless of macOS appearance.
-theme = TokyoNight Night
+#theme = TokyoNight Night
+theme = Catppuccin frappe
 window-theme = dark
 background-opacity = 0.95
 background-blur = 20
