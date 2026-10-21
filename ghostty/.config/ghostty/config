@@ -4,7 +4,7 @@
 # ── Theme ────────────────────────────────────────────────────────────────
 # Always dark TokyoNight Night, regardless of macOS appearance.
 #theme = TokyoNight Night
-theme = Catppuccin frappe
+theme = Monokai Pro
 window-theme = dark
 background-opacity = 0.95
 background-blur = 20
@@ -29,7 +29,7 @@ macos-option-as-alt = right
 # Not "tabs": that custom titlebar is only tested up to macOS 14 and renders
 # broken on newer macOS, especially with background-opacity/blur.
 macos-titlebar-style = transparent
-window-height = 23
+window-height = 25
 window-width = 120
 window-padding-x = 10
 window-padding-y = 8
